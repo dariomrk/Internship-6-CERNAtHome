@@ -54,12 +54,7 @@ CREATE TABLE scientist(
     countryid INT REFERENCES country(id) NOT NULL,
     gender GENDER NOT NULL,
     field FIELD NOT NULL,
-    hotelid INT REFERENCES hotel(id) NOT NULL CHECK(
-        (SELECT (COUNT(s.id) < h.capacity) as hasfreespace FROM hotel h
-        JOIN scientist s ON s.hotelid = h.id
-        WHERE s.hotelid = h.id AND h.id = hotelid
-        GROUP BY h.id).hasfreespace
-    )
+    hotelid INT REFERENCES hotel(id) NOT NULL
 );
 
 CREATE TABLE researchscientist(
