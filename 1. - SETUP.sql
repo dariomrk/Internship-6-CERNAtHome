@@ -15,13 +15,13 @@ CREATE TABLE project(
 
 CREATE TABLE acceleratorproject(
     id SERIAL PRIMARY KEY,
-    acceleratorid INT REFERENCES accelerator(id),
-    projectid INT REFERENCES project(id) NOT NULL
+    acceleratorid INT REFERENCES accelerator(id) ON DELETE CASCADE,
+    projectid INT REFERENCES project(id) NOT NULL ON DELETE CASCADE
 );
 
 CREATE TABLE scientificresearch(
     id SERIAL PRIMARY KEY,
-    projectid INT REFERENCES project(id),
+    projectid INT REFERENCES project(id) ON DELETE CASCADE,
     name VARCHAR(60) NOT NULL,
     numofquotes INT DEFAULT 0
 );
@@ -36,13 +36,13 @@ CREATE TABLE country(
 CREATE TABLE city(
     id SERIAL PRIMARY KEY,
     name VARCHAR(60) NOT NULL,
-    countryid INT REFERENCES country(id) NOT NULL
+    countryid INT REFERENCES country(id) NOT NULL ON DELETE CASCADE
 );
 
 CREATE TABLE hotel(
     id SERIAL PRIMARY KEY,
     name VARCHAR(30) NOT NULL,
-    cityid INT REFERENCES city(id) NOT NULL,
+    cityid INT REFERENCES city(id) NOT NULL ON DELETE CASCADE,
     capacity INT NOT NULL CHECK (capacity > 0)
 );
 
@@ -51,14 +51,14 @@ CREATE TABLE scientist(
     firstname VARCHAR(30) NOT NULL,
     lastname VARCHAR(30) NOT NULL,
     dateofbirth DATE NOT NULL,
-    countryid INT REFERENCES country(id) NOT NULL,
+    countryid INT REFERENCES country(id) NOT NULL ON DELETE CASCADE,
     gender GENDER NOT NULL,
     field FIELD NOT NULL,
-    hotelid INT REFERENCES hotel(id) NOT NULL
+    hotelid INT REFERENCES hotel(id) NOT NULL ON DELETE CASCADE
 );
 
 CREATE TABLE researchscientist(
-    scientificresearchid INT REFERENCES scientificresearch(id) NOT NULL,
-    scientistid INT REFERENCES scientist(id) NOT NULL,
+    scientificresearchid INT REFERENCES scientificresearch(id) NOT NULL ON DELETE CASCADE,
+    scientistid INT REFERENCES scientist(id) NOT NULL ON DELETE CASCADE,
     PRIMARY KEY(scientificresearchid, scientistid)
 );
