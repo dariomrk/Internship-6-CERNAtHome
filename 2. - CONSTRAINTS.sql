@@ -9,3 +9,6 @@ CREATE FUNCTION checkhotelfreespace(hotelid INT) RETURNS BOOLEAN
 
 ALTER TABLE scientist
 ADD CONSTRAINT canstayathotel CHECK (checkhotelfreespace(hotelid));
+
+ALTER TABLE country
+ADD CONSTRAINT uniquecountryname UNIQUE (name);
