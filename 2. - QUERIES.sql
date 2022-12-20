@@ -6,7 +6,7 @@ JOIN scientist sci ON sci.id = rssci.scientistid
 GROUP BY sr.id;
 
 -- 2. select every scientist. Output first and last name, gender, country and the income per capita of country.
-SELECT sci.firstname, sci.lastname, sci.gender, c.name, CONCAT(c.incomepercapita, ' $/capita') FROM scientist sci
+SELECT sci.firstname, sci.lastname, sci.gender, c.name, CONCAT(c.incomepercapita, ' $/capita') as ppp FROM scientist sci
 JOIN country c ON sci.countryid = c.id;
 
 -- 3. select every combination of project and accelerator. in the case a project is not tied to an accelerator
@@ -22,22 +22,20 @@ WHERE DATE_PART('year',sr.publishedat) <= 2017 and DATE_PART('year',sr.published
 
 -- 5. TODO
 -- select number of works from a given country.
-SELECT c.name, COUNT(sr.id) as numberofpapers
-FROM country c
-JOIN scientist s ON s.countryid = c.id
+SELECT c.name, COUNT(sr.id) FROM country c
+JOIN scientist s ON c.id = s.countryid
 JOIN researchscientist rs ON rs.scientistid = s.id
 JOIN scientificresearch sr ON sr.id = rs.scientificresearchid
-GROUP BY c.id;
+GROUP BY c.name;
 
--- select the number of quotes of the most popular work from a given country
-SELECT c.name, MAX(sr.numofquotes) as mostquoted FROM country c
-JOIN scientist s ON s.countryid = c.id
+-- select works with most quotes per country
+SELECT c.name, MAX(sr.numofquotes) FROM country c
+JOIN scientist s ON c.id = s.countryid
 JOIN researchscientist rs ON rs.scientistid = s.id
 JOIN scientificresearch sr ON sr.id = rs.scientificresearchid
-GROUP BY c.id;
+GROUP BY c.name;
 
--- 6. TODO
--- select first work of each country
+-- 6. select first work of each country
 SELECT c.name, MIN(sr.publishedat) as oldest FROM country c
 JOIN scientist s ON s.countryid = c.id
 JOIN researchscientist rs ON rs.scientistid = s.id
