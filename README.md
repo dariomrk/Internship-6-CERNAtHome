@@ -15,3 +15,6 @@ RETURN (SELECT (COUNT(s.id) < h.capacity) as hasfreespace FROM hotel h
     GROUP BY h.id
     LIMIT 1);
 ```
+
+## Database diagram
+  ![diagram](./diagram.png)
