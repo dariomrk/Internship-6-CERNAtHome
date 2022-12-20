@@ -58,15 +58,15 @@ ORDER BY averagenumberofquotes DESC;
 -- 9. select scientists by field, decade of birth and gender.
 -- in the case that the number of scientists is less than 20 per category, do not show it.
 -- order by decade of birth.
-SELECT COUNT(s.id),s.field, CAST(DATE_PART('decade', (s.dateofbirth)) AS INT) as decade, s.gender FROM scientist s
+SELECT COUNT(s.id),s.field, DATE_PART('decade', (s.dateofbirth)) as decade, s.gender FROM scientist s
 GROUP BY s.field,decade,s.gender
-HAVING COUNT(s.id) > 20 -- nothing matches condition after 3; more entries would be required.
+HAVING COUNT(s.id) > 2 -- nothing matches condition after 3; more entries would be required.
 ORDER BY decade DESC;
 
 -- 10. select the 10 most wealthy scientists using the given formula.
 SELECT CONCAT(s.firstname, ' ', s.lastname) as scientist, (SQRT(sr.numofquotes) / COUNT(rs.scientificresearchid)) as earnings FROM scientist s
 JOIN researchscientist rs ON s.id = rs.scientistid
 JOIN scientificresearch sr ON rs.scientificresearchid = sr.id
-GROUP BY s.id, sr.id
+GROUP BY  rs.scientificresearchid,s.id, sr.numofquotes
 ORDER BY earnings DESC
 LIMIT 10;
