@@ -21,20 +21,20 @@ JOIN scientificresearch sr ON p.id = sr.projectid
 WHERE DATE_PART('year',sr.publishedat) <= 2017 and DATE_PART('year',sr.publishedat) >= 2015;
 
 -- 5. select number of works from a given country, max number of quotes for a work from a given country and the name of the work.
-SELECT c.name, COUNT(sr.id), MAX(sr.numofquotes), (
+SELECT c.name as countryname, COUNT(sr.id) as numberofworks, MAX(sr.numofquotes) as mostpopular, (
     SELECT subsr.name FROM scientificresearch subsr
     WHERE subsr.numofquotes = MAX(sr.numofquotes)
-) FROM country c
+) as nameofmostpopular FROM country c
 JOIN scientist s ON c.id = s.countryid
 JOIN researchscientist rs ON rs.scientistid = s.id
 JOIN scientificresearch sr ON sr.id = rs.scientificresearchid
 GROUP BY c.name;
 
 -- 6. select first work of each country
-SELECT c.name, MIN(sr.publishedat) as oldest, (
+SELECT c.name as countryname, MIN(sr.publishedat) as oldest, (
     SELECT subsr.name FROM scientificresearch subsr
     WHERE subsr.publishedat = MIN(sr.publishedat)
-) FROM country c
+) as work FROM country c
 JOIN scientist s ON s.countryid = c.id
 JOIN researchscientist rs ON rs.scientistid = s.id
 JOIN scientificresearch sr ON sr.id = rs.scientificresearchid
@@ -60,11 +60,10 @@ ORDER BY averagenumberofquotes DESC;
 -- order by decade of birth.
 SELECT COUNT(s.id),s.field, CAST(DATE_PART('decade', (s.dateofbirth)) AS INT) as decade, s.gender FROM scientist s
 GROUP BY s.field,decade,s.gender
-HAVING COUNT(s.id) > 20 -- nothing matches condition when > 3 (more entries required)
+HAVING COUNT(s.id) > 20 -- nothing matches condition after 3; more entries would be required.
 ORDER BY decade DESC;
 
--- 10.
--- select the 10 most wealthy scientists using the given formula.
+-- 10. select the 10 most wealthy scientists using the given formula.
 SELECT CONCAT(s.firstname, ' ', s.lastname) as scientist, (SQRT(sr.numofquotes) / COUNT(rs.scientificresearchid)) as earnings FROM scientist s
 JOIN researchscientist rs ON s.id = rs.scientistid
 JOIN scientificresearch sr ON rs.scientificresearchid = sr.id
