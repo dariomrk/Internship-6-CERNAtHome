@@ -70,3 +70,6 @@ JOIN scientificresearch sr ON rs.scientificresearchid = sr.id
 GROUP BY  rs.scientificresearchid,s.id, sr.numofquotes
 ORDER BY earnings DESC
 LIMIT 10;
+
+-- 11. improve lookup performance for table scientificresearch (search by name)
+CREATE INDEX scientificresearchname ON scientificresearch USING HASH (name);
