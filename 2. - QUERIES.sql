@@ -36,7 +36,10 @@ JOIN scientificresearch sr ON sr.id = rs.scientificresearchid
 GROUP BY c.name;
 
 -- 6. select first work of each country
-SELECT c.name, MIN(sr.publishedat) as oldest FROM country c
+SELECT c.name, MIN(sr.publishedat) as oldest, (
+    SELECT subsr.name FROM scientificresearch subsr
+    WHERE subsr.publishedat = MIN(sr.publishedat)
+) FROM country c
 JOIN scientist s ON s.countryid = c.id
 JOIN researchscientist rs ON rs.scientistid = s.id
 JOIN scientificresearch sr ON sr.id = rs.scientificresearchid
