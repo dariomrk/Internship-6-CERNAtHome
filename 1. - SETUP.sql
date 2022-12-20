@@ -23,7 +23,8 @@ CREATE TABLE scientificresearch(
     id SERIAL PRIMARY KEY,
     projectid INT NOT NULL REFERENCES project(id) ON DELETE CASCADE,
     name VARCHAR(60) NOT NULL,
-    numofquotes INT DEFAULT 0
+    numofquotes INT DEFAULT 0,
+    publishedat TIMESTAMP DEFAULT now()
 );
 
 CREATE TABLE country(
