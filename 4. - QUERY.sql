@@ -1,5 +1,5 @@
 -- 1. select every scientific research with all of the scientists that have worked on it.
--- The names must be in the following format: n. lastname,... .
+-- the names must be in the following format: n. lastname,... .
 SELECT sr.name, STRING_AGG(CONCAT(SUBSTRING(sci.firstname,1,1),'. ',sci.lastname), ', ') FROM scientificresearch sr
 JOIN researchscientist rssci ON sr.id = rssci.scientificresearchid
 JOIN scientist sci ON sci.id = rssci.scientistid
@@ -9,7 +9,7 @@ GROUP BY sr.id;
 SELECT sci.firstname, sci.lastname, sci.gender, c.name, CONCAT(c.incomepercapita, ' $/capita') FROM scientist sci
 JOIN country c ON sci.countryid = c.id;
 
--- 3. select every combination of project and accelerator. In the case a project is not tied to an accelerator
+-- 3. select every combination of project and accelerator. in the case a project is not tied to an accelerator
 -- still output the project name with accelerator: none.
 SELECT p.name as project, COALESCE(a.name, 'None') as accelerator FROM accelerator a
 FULL OUTER JOIN acceleratorproject ap ON a.id = ap.acceleratorid
@@ -20,7 +20,7 @@ SELECT p.name as project, sr.publishedat FROM project p
 JOIN scientificresearch sr ON p.id = sr.projectid
 WHERE DATE_PART('year',sr.publishedat) <= 2017 and DATE_PART('year',sr.publishedat) >= 2015;
 
--- 5.
+-- 5. TODO
 -- select number of works from a given country.
 SELECT c.name, COUNT(sr.id) as numberofpapers
 FROM country c
@@ -36,7 +36,7 @@ JOIN researchscientist rs ON rs.scientistid = s.id
 JOIN scientificresearch sr ON sr.id = rs.scientificresearchid
 GROUP BY c.id;
 
--- 6.
+-- 6. TODO
 -- select first work of each country
 SELECT c.name, MIN(sr.publishedat) as oldest FROM country c
 JOIN scientist s ON s.countryid = c.id
@@ -52,9 +52,18 @@ GROUP BY c.id
 ORDER BY count(s.id) DESC;
 
 -- 8. average number of quotes per accelerator
-SELECT a.name, ROUND(AVG(sr.numofquotes),2) as average FROM accelerator a
+SELECT a.name, ROUND(AVG(sr.numofquotes),2) as averagenumberofquotes FROM accelerator a
 JOIN acceleratorproject ap ON a.id = ap.acceleratorid
 JOIN project p ON ap.projectid = p.id
 JOIN scientificresearch sr ON p.id = sr.projectid
 GROUP BY a.id
-ORDER BY average DESC;
+ORDER BY averagenumberofquotes DESC;
+
+-- 9. select scientists by field, decade of birth and gender.
+-- in the case that the number of scientists is less than 20 per category, do not show it.
+-- order by decade of birth.
+
+SELECT COUNT(s.id),s.field, CAST(DATE_PART('decade', (s.dateofbirth)) AS INT) as decade, s.gender FROM scientist s
+GROUP BY s.field,decade,s.gender
+HAVING COUNT(s.id) > 20 -- nothing matches condition when > 3 (more entries required)
+ORDER BY decade DESC;
