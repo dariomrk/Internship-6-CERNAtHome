@@ -1,6 +1,6 @@
 -- 1. select every scientific research with all of the scientists that have worked on it.
 -- the names must be in the following format: n. lastname,... .
-SELECT sr.name, STRING_AGG(CONCAT(SUBSTRING(sci.firstname,1,1),'. ',sci.lastname), ', ') FROM scientificresearch sr
+SELECT sr.name, STRING_AGG(CONCAT(SUBSTRING(sci.firstname,1,1),'. ',sci.lastname), ', ') as scientists FROM scientificresearch sr
 JOIN researchscientist rssci ON sr.id = rssci.scientificresearchid
 JOIN scientist sci ON sci.id = rssci.scientistid
 GROUP BY sr.id;
