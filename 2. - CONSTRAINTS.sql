@@ -1,5 +1,6 @@
 -- function that checks whether a given hotel has free space
 -- DOES NOT WORK -> RETURNS MULTIPLE ROWS IN SOME CASES
+-- FIX? -> LIMIT 1
 -- CREATE FUNCTION checkhotelfreespace(hotelid INT) RETURNS BOOLEAN
 --     LANGUAGE SQL
 --     IMMUTABLE
