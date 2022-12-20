@@ -20,16 +20,11 @@ SELECT p.name as project, sr.publishedat FROM project p
 JOIN scientificresearch sr ON p.id = sr.projectid
 WHERE DATE_PART('year',sr.publishedat) <= 2017 and DATE_PART('year',sr.publishedat) >= 2015;
 
--- 5. TODO
--- select number of works from a given country.
-SELECT c.name, COUNT(sr.id) FROM country c
-JOIN scientist s ON c.id = s.countryid
-JOIN researchscientist rs ON rs.scientistid = s.id
-JOIN scientificresearch sr ON sr.id = rs.scientificresearchid
-GROUP BY c.name;
-
--- select works with most quotes per country
-SELECT c.name, MAX(sr.numofquotes) FROM country c
+-- 5. select number of works from a given country, max number of quotes for a work from a given country and the name of the work.
+SELECT c.name, COUNT(sr.id), MAX(sr.numofquotes), (
+    SELECT subsr.name FROM scientificresearch subsr
+    WHERE subsr.numofquotes = MAX(sr.numofquotes)
+) FROM country c
 JOIN scientist s ON c.id = s.countryid
 JOIN researchscientist rs ON rs.scientistid = s.id
 JOIN scientificresearch sr ON sr.id = rs.scientificresearchid
